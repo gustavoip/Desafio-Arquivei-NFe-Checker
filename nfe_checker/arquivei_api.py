@@ -70,7 +70,7 @@ class ArquiveiAPI:
         try:
             _ = response.json()
         except json.JSONDecodeError as e:
-            logger.exception(f"Problem to decode the response: '{response.text}'", e)
+            logger.exception(f"Exception deconding the response: '{response.text}'", e)
             raise e
 
         if response.status_code != 200:

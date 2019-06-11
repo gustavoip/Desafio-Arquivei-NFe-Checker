@@ -1,0 +1,6 @@
+Flask==1.0.3
+Flask-SQLAlchemy==2.4.0
+Jinja2==2.10.1
+requests==2.22.0
+tenacity==5.0.4
+WTForms==2.2.1
