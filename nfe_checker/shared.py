@@ -1,14 +1,14 @@
 import logging
 from logging.handlers import RotatingFileHandler
 
-from flask_sqlalchemy import SQLAlchemy, sqlalchemy, orm
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 
 def create_logger() -> logging.Logger:
     logger = logging.getLogger(__file__)
     logger.setLevel(logging.DEBUG)
-    formatter = logging.Formatter(
-        "%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
+    formatter = logging.Formatter("%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
 
     handler = RotatingFileHandler(
         filename="nfes.log", backupCount=3, maxBytes=5 * 1024 * 1024
@@ -20,8 +20,8 @@ def create_logger() -> logging.Logger:
     return logger
 
 
-engine = sqlalchemy.create_engine('sqlite:///foo.db')
-Session = orm.sessionmaker(bind=engine)
+app = Flask(__name__)
+app.config.from_pyfile("config.cfg")
 
 logger = create_logger()
-db = SQLAlchemy()
+db = SQLAlchemy(app)

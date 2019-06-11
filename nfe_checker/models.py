@@ -1,8 +1,8 @@
-from nfe_checker.config import db
+from nfe_checker.shared import db
 
 
 class Nfe(db.Model):
-    __tablename__ = 'nfes'
+    __tablename__ = "nfes"
 
     id = db.Column(db.Integer, primary_key=True)
     access_key = db.Column(db.String())
@@ -13,11 +13,11 @@ class Nfe(db.Model):
         self.value = value
 
     def __repr__(self):
-        return f'<id {self.id};value {self.value};access_key {self.access_key}>'
+        return f"<id {self.id};value {self.value};access_key {self.access_key}>"
 
 
 class Cursor(db.Model):
-    __tablename__ = 'cursors'
+    __tablename__ = "cursors"
     id = db.Column(db.Integer, primary_key=True)
     cursor_position = db.Column(db.Integer())
 

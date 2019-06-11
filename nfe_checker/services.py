@@ -2,8 +2,8 @@ import threading
 import time
 
 from nfe_checker.arquivei_api import ArquiveiAPI
-from nfe_checker.config import logger, Session
 from nfe_checker.models import Nfe, Cursor
+from nfe_checker.shared import logger, db
 
 
 class NfesCollectorService(threading.Thread):
@@ -14,24 +14,25 @@ class NfesCollectorService(threading.Thread):
 
     def run(self):
         logger.info(f"Starting {self.service_name}")
-        session = Session()
-        last_cursor = Cursor.query.order_by('-id').first()
-        last_cursor = last_cursor.cursor_position
+        last_cursor = Cursor.query.order_by(-Cursor.id).first()
+        if last_cursor is None:
+            last_cursor = 0
+        else:
+            last_cursor = last_cursor.cursor_position
         while True:
             try:
                 nfes, last_cursor = self.arquivei_api.get_last_nfes(cursor=last_cursor)
                 nfes = [Nfe(**nfe) for nfe in nfes]
                 last_cursor = Cursor(cursor_position=last_cursor)
-
-                session.add_all(nfes + [last_cursor])
-                session.commit()
+                db.session.add_all(nfes + [last_cursor])
+                db.session.commit()
 
             except Exception as e:
                 # TODO: Be more specific here... Lack of test cases
-                logger.exception(f"Exception in the"
-                                 f"{self.service_name} loop", e)
+                logger.exception(f"Exception in the" f"{self.service_name} loop", e)
             else:
-                logger.info(f"Success! {len(nfes) + 1} were inserted in the "
-                            f"database")
+                logger.info(
+                    f"Success! {len(nfes) + 1} were inserted in the " f"database"
+                )
 
             time.sleep(5 * 60)

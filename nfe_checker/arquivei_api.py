@@ -1,4 +1,5 @@
 import base64
+import json
 import xml.etree.ElementTree as ET
 from typing import List, Tuple, Dict
 from urllib.parse import urlparse, parse_qs
@@ -6,7 +7,7 @@ from urllib.parse import urlparse, parse_qs
 import requests
 from tenacity import retry, stop_after_attempt, wait_random
 
-from nfe_checker.config import logger
+from nfe_checker.shared import logger
 
 API_BASE = "https://apiuat.arquivei.com.br"
 _API_ENDPOINT = API_BASE + "/v1/nfe/received?cursor={cursor}&limit={limit}"
@@ -66,14 +67,16 @@ class ArquiveiAPI:
         logger.debug(f"Requesting '{url_query}'")
 
         response = self.client.get(url_query, headers=self.credentials)
-        _ = response.json()
+        try:
+            _ = response.json()
+        except json.JSONDecodeError as e:
+            logger.exception(f"Problem to decode the response: '{response.text}'", e)
+            raise e
 
         if response.status_code != 200:
-            logger.error(
-                f"Response for '{url_query}' was {response.status_code}")
+            logger.error(f"Response for '{url_query}' was {response.status_code}")
             logger.error(_)
         logger.debug(f"{_['count']} NFEs found. Next: {_['page']['next']}")
-
         return _
 
     def get_last_nfes(self, cursor: int = 0, limit: int = 50) -> Tuple[List[Dict], int]:
@@ -100,4 +103,3 @@ class ArquiveiAPI:
             all_nfes.append(_parse_nfe_xml(item))
 
         return all_nfes, next_page_cursor
-
