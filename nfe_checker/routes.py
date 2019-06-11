@@ -11,7 +11,6 @@ class ReusableForm(Form):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    """Endpoint to create a user."""
     form = ReusableForm(request.form)
     value = None
     not_found_msg = False

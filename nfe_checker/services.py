@@ -2,7 +2,7 @@ import threading
 import time
 
 from nfe_checker.arquivei_api import ArquiveiAPI
-from nfe_checker.models import Nfe, Cursor
+from nfe_checker.models import Nfe, CursorPosition
 from nfe_checker.shared import logger, db
 
 
@@ -14,7 +14,7 @@ class NfesCollectorService(threading.Thread):
 
     def run(self):
         logger.info(f"Starting {self.service_name}")
-        last_cursor = Cursor.query.order_by(-Cursor.id).first()
+        last_cursor = CursorPosition.query.order_by(-CursorPosition.id).first()
         if last_cursor is None:
             last_cursor = 0
         else:
@@ -23,7 +23,7 @@ class NfesCollectorService(threading.Thread):
             try:
                 nfes, last_cursor = self.arquivei_api.get_last_nfes(cursor=last_cursor)
                 nfes = [Nfe(**nfe) for nfe in nfes]
-                last_cursor = Cursor(cursor_position=last_cursor)
+                last_cursor = CursorPosition(cursor_position=last_cursor)
                 db.session.add_all(nfes + [last_cursor])
                 db.session.commit()
 

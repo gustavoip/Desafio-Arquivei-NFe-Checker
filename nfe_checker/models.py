@@ -16,7 +16,7 @@ class Nfe(db.Model):
         return f"<id {self.id};value {self.value};access_key {self.access_key}>"
 
 
-class Cursor(db.Model):
+class CursorPosition(db.Model):
     __tablename__ = "cursors"
     id = db.Column(db.Integer, primary_key=True)
     cursor_position = db.Column(db.Integer())
