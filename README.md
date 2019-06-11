@@ -8,3 +8,13 @@ foi o _SQLite_,
 mas 
 por conta da abstração do _ORM_ poderia ser utilizado qualquer outro banco 
 relacional. 
+
+
+## Exemplos
+
+
+![Exemplo com uma valor de nota fake](nfe_checker/static/print1.png)
+
+
+![Não encontrou 'bla'](nfe_checker/static/print2.png)
+
