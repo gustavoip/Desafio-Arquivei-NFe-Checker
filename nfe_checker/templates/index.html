@@ -1,0 +1,46 @@
+<html>
+  <head>
+     <title>Consultar Valor NFE</title>
+     <link rel="stylesheet" media="screen" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  </head>
+  <body>
+
+    <div class="container"><br>
+        <h2>Consultar Valor NFE</h2>
+    </div>
+
+    <div class=container"><br>
+    <div class="row align-items-center justify-content-center">
+    <div class="col-md-4">
+      <form  action="" method="post" role="form">
+        {{ form.csrf }}
+        <div class="form-group">
+                  <label for="name">Chave de Acesso :</label>
+                  <input type="text" class="form-control" id="name"
+                         name="access_token" placeholder="Name?">
+
+	    </div>
+        <br>
+          <button type="submit" class="btn btn-success">Checar valor da
+          NFE</button>
+    </form>
+      <br>
+        {% if value: %}
+            <div class="alert alert-info">
+            <strong>Success! </strong> O valor da nota é {{ value }}
+            </div>
+        {% endif %}
+        {% if not_found_msg: %}
+            <div class="alert alert-danger">
+            <strong>Error: </strong> A nota não foi encontrada.
+            </div>
+        {% endif %}
+    </div>
+    <br>
+    </div>
+    </div>
+  </body>
+</html>
